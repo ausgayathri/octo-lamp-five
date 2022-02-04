@@ -1,29 +1,11 @@
-/* ***************************
-  JWD JavaScript Assessment
-
-  This code is unfinished. You will need to study it to figure out what it does. Then you will need to use this and
-  your own code, to finish the app. 
-  
-  The tasks you need to do are below.
-
-    TASKS TODO:
-      1. Calculate the score as the total of the number of correct answers
-
-      2. Add an Event listener for the submit button, which will display the score and highlight 
-         the correct answers when the button is clicked. Use the code from lines 67 to 86 to help you.
-
-      3. Add 2 more questions to the app (each question must have 4 options).
-
-      4. Reload the page when the reset button is clicked (hint: search window.location)
-
-      5. Add a countdown timer - when the time is up, end the quiz, display the score and highlight the correct answers
-*************************** */
-
 window.addEventListener('DOMContentLoaded', () => {
   const start = document.querySelector('#start');
+  const submit = document.querySelector('#btnSubmit');
+  const reset = document.querySelector('#Resetbtn')
   start.addEventListener('click', function (e) {
     document.querySelector('#quizBlock').style.display = 'block';
     start.style.display = 'none';
+    myFunction()
   });
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
@@ -40,12 +22,21 @@ window.addEventListener('DOMContentLoaded', () => {
       a: 3,
     },
     {
-      q: 'What is the capital of Australia',
+      q: 'What is the capital of Australia?',
       o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
       a: 1,
     },
+    {
+      q: 'How many states in Australia?',
+      o: ['Seven', 'Six', 'Eight', 'Four'],
+      a: 1,
+    },
+    {
+      q: 'Which is the biggest state in Australia?',
+      o: ['Sydney', 'Western Australia', 'Melbourne', 'LA'],
+      a: 1,
+    },
   ];
-
   // function to Display the quiz questions and answers from the object
   const displayQuiz = () => {
     const quizWrap = document.querySelector('#quizWrap');
@@ -62,9 +53,9 @@ window.addEventListener('DOMContentLoaded', () => {
       quizWrap.innerHTML = quizDisplay;
     });
   };
-
   // Calculate the score
   const calculateScore = () => {
+    console.log("Calculate score called")
     let score = 0;
     quizArray.map((quizItem, index) => {
       for (let i = 0; i < 4; i++) {
@@ -73,18 +64,58 @@ window.addEventListener('DOMContentLoaded', () => {
         let r = `radio_${index}_${i}`;
         liElement = document.querySelector('#' + li);
         radioElement = document.querySelector('#' + r);
-
         if (quizItem.a == i) {
           //change background color of li element here
+          document.getElementById(id = li).style.backgroundColor = "  Yellow";
         }
-
         if (radioElement.checked) {
           // code for task 1 goes here
+          if (i == quizItem.a) {
+            console.log("Question ", i, "PASSED")
+            score = score + 1;
+          }
         }
       }
     });
+    console.log("Calculate score DONE with score", score)
+    if (score == 5) {
+      console.log("All QUESTIONS Passed")
+    }
+    alert("You scored " + score + " out of 5 ");
+    return score;
   };
-
+  const resetfunction = () => {
+    console.log("reload ")
+    location.reload();
+  }
+  submit.addEventListener('click', calculateScore);
+  reset.addEventListener('click', resetfunction);
+  var seconds = 0, stop = 15, counterStarted = false, counter;
+  function myFunction() {
+    if (counterStarted === false) {
+      counterStarted = true;
+      counter = setInterval(function () {
+        if (seconds <= stop) {
+          document.getElementById('time').innerHTML = seconds;
+          seconds++;
+          console.log('TIMER RUNNING' + seconds)
+        } else {
+          document.getElementById('time').setAttribute("disabled", "disabled");
+          clearInterval(counter);
+          counterStarted = false;
+          seconds = 0;
+          let score1 = calculateScore()
+          alert("Session Expired. Your Score is " + score1 + " out of 5 ");
+        }
+      }, 1000)
+    }
+  }
   // call the displayQuiz function
   displayQuiz();
 });
+
+
+
+
+
+
